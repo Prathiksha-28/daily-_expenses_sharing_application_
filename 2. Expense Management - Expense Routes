@@ -1,0 +1,11 @@
+// src/routes/expenseRoutes.js
+const express = require('express');
+const router = express.Router();
+const ExpenseController = require('../controllers/ExpenseController');
+
+router.post('/expenses', ExpenseController.addExpense);
+router.get('/expenses/user/:id', ExpenseController.getUserExpenses);
+router.get('/expenses', ExpenseController.getAllExpenses);
+router.get('/expenses/download', ExpenseController.downloadBalanceSheet);
+
+module.exports = router;
