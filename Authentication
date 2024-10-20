@@ -1,6 +1,6 @@
-#Step 1. Install dependencies
+Step 1. Install dependencies
 npm install bcryptjs jsonwebtoken express-validator
-##Step 2. Update User Model
+Step 2. Update User Model
 // src/models/User.js
 const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
@@ -8,7 +8,7 @@ const userSchema = new mongoose.Schema({
   mobile: { type: String, required: true },
   password: { type: String, required: true }  // Add password field
 });
-### Step 3. User Registration and Login
+Step 3. User Registration and Login
 // src/controllers/UserController.js
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -41,7 +41,7 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-#### Step 4. Protect Routes
+Step 4. Protect Routes
 // src/middlewares/auth.js
 const jwt = require('jsonwebtoken');
 
@@ -56,8 +56,8 @@ const auth = (req, res, next) => {
   });
 };
 
-module.exports = auth;
-##### Step 5. Use Middleware in Routes
+module.exports= auth;
+Step 5. Use Middleware in Routes
 // src/routes/expenseRoutes.js
 const auth = require('../middlewares/auth');
 
