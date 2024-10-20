@@ -1,0 +1,68 @@
+#Step 1. Install dependencies
+npm install bcryptjs jsonwebtoken express-validator
+##Step 2. Update User Model
+// src/models/User.js
+const userSchema = new mongoose.Schema({
+  email: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
+  mobile: { type: String, required: true },
+  password: { type: String, required: true }  // Add password field
+});
+### Step 3. User Registration and Login
+// src/controllers/UserController.js
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+
+exports.registerUser = async (req, res) => {
+  const { email, name, mobile, password } = req.body;
+  
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const newUser = await User.create({ email, name, mobile, password: hashedPassword });
+    res.status(201).json({ message: 'User registered successfully', userId: newUser._id });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+exports.loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  
+  try {
+    const user = await User.findOne({ email });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+
+    const token = jwt.sign({ userId: user._id }, 'your_jwt_secret', { expiresIn: '1h' });
+    res.json({ token });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+#### Step 4. Protect Routes
+// src/middlewares/auth.js
+const jwt = require('jsonwebtoken');
+
+const auth = (req, res, next) => {
+  const token = req.headers['authorization'];
+  if (!token) return res.status(401).json({ message: 'No token provided' });
+
+  jwt.verify(token, 'your_jwt_secret', (err, decoded) => {
+    if (err) return res.status(403).json({ message: 'Failed to authenticate token' });
+    req.userId = decoded.userId;
+    next();
+  });
+};
+
+module.exports = auth;
+##### Step 5. Use Middleware in Routes
+// src/routes/expenseRoutes.js
+const auth = require('../middlewares/auth');
+
+router.post('/expenses', auth, ExpenseController.addExpense);
+router.get('/expenses/user/:id', auth, ExpenseController.getUserExpenses);
+
+
+
