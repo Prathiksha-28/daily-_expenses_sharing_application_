@@ -1,0 +1,6 @@
+// src/utils/balanceSheet.js
+const generateBalanceSheet = (expenses) => {
+  // Logic to format expenses and calculate totals
+};
+
+module.exports = generateBalanceSheet;
