@@ -1,0 +1,18 @@
+/daily-expenses-sharing
+│
+├── /src
+│   ├── /controllers
+│   ├── /models
+│   ├── /routes
+│   ├── /middlewares
+│   ├── /utils
+│   └── app.js
+│
+├── /config
+│   └── db.js
+│
+├── /tests
+│
+├── package.json
+├── README.md
+└── .gitignore
